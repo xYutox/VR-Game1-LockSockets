@@ -1,53 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class SocketEvent : XRSocketInteractor
 {
-    // XRBaseInteractable interactable = gameObject.GetComponent<XRBaseInteractable>();
+    private string socketTag;
 
-    //public void CheckObjectTag()
-    //{
-    //    XRSocketInteractor socket = gameObject.GetComponent<XRSocketInteractor>();
-    //    XRBaseInteractable interactable = gameObject.GetComponent<XRBaseInteractable>();
-
-    //    // check socket tag
-    //    if (socket.CompareTag("SocketMotherboard"))
-    //    {
-    //        // check object tag
-    //        if (interactable.CompareTag("CPU"))
-    //        {
-    //            Debug.Log("tag check");
-
-    //            interactable.gameObject.layer = 8;
-    //        }
-    //    }
-    //    else if ()
-    //    {
-
-    //    }
-    //}
-
-    protected override void OnSelectEntered(SelectEnterEventArgs args)
+    public void Start()
     {
         XRSocketInteractor socket = gameObject.GetComponent<XRSocketInteractor>();
 
-        // check socket tag
-        if (socket.CompareTag("SocketMotherboard"))
-        {
-            Debug.Log("tag check1");
-            Debug.Log(interactable.name);
+        socketTag = socket.tag;
 
-            // check object tag
-            if (args.interactorObject is XRGrabInteractable)
-            {
-                Debug.Log("tag check2");
-                interactable.gameObject.layer = 8;
-            }
+        Debug.Log("Socket Tag = " + socketTag);
+    }
+
+    protected override void OnSelectEntered(XRBaseInteractable interactable)
+    {
+        Debug.Log("Object Tag = " + interactable.tag);
+
+        if(interactable.tag == socketTag)
+        {
+            Debug.Log("Right Object Placed in Socket");
+
+            changeObjectLayer(interactable);
         }
 
-        base.OnSelectEntered(args);
+        base.OnSelectEntered(interactable);
+    }
+
+    public void changeObjectLayer(XRBaseInteractable interactable)
+    {
+        interactable.gameObject.layer = 8;
     }
 }
